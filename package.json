@@ -1,0 +1,19 @@
+{
+  "name": "lespetitsplats",
+  "version": "1.0.0",
+  "description": "projet7 oc",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salihayoubi23/lespetitsplats.git"
+  },
+  "author": "saliha youbi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/salihayoubi23/lespetitsplats/issues"
+  },
+  "homepage": "https://github.com/salihayoubi23/lespetitsplats#readme"
+}
