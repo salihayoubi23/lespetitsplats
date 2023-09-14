@@ -9,7 +9,8 @@ function displayData(recipes) {
   const recipeCount = document.querySelector(".recipe-count");
   
   if (recipes.length === 0) {
-    noRecipesMessage.textContent = `Aucune recette ne contient "${mainSearch.value}".`;
+    noRecipesMessage.textContent = `Aucune recette ne contient "${mainSearch.value}" vous pouvez chercher «
+    tarte aux pommes », « poisson ».`;
     recipesSection.innerHTML = "";
   } else {
     noRecipesMessage.textContent = "";
