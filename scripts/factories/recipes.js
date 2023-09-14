@@ -1,6 +1,6 @@
 function recipesFactory(data) {
 
-    const { id, image, name, servings, ingredients, time, description, appliance, ustensils } = data;
+    const { id, image, name,ingredients, time, description, appliance, ustensils } = data;
     const parsedIngredients = [];
 
     for (let i = 0; i < ingredients.length; i++) {

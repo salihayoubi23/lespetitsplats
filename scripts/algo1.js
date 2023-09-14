@@ -1,4 +1,4 @@
-
+//methode Filter
 const ingredientList = document.querySelector(".ingredient-list");
 const applianceList = document.querySelector(".appliance-list");
 const utensilList = document.querySelector(".utensil-list");
