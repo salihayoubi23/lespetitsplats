@@ -20,10 +20,12 @@ const filteredIngredients = new Set();
 const filteredAppliances = new Set();
 const filteredUtensils = new Set();
 
-//gestion de la casse
+//// Fonction pour normaliser le texte en minuscules
 function textNormalize(word) {
   return word.toLowerCase();
 }
+
+// Boucle sur les recettes pour extraire et stocker les valeurs uniques d'ingrédients, appareils et ustensiles
 
 recipes.forEach(recipe => {
   recipe.ingredients.map(recipeIngredient => recipeIngredient.ingredient)
@@ -37,15 +39,13 @@ recipes.map(recipe => textNormalize(recipe.appliance))
 recipes.map(recipe => recipe.ustensils.map(utensil => textNormalize(utensil)))
   .forEach(utensils => utensils.forEach(utensil => uniqueUtensils.add(utensil)));
 
+// Fonction pour filtrer les recettes en fonction des critères de recherche et des filtres
 
-
-
-//Fonction pour mettre à jour et afficher la liste des recettes mise à jour lorsqu'une recherche est effectuée
 function filterRecipes() {
   const searchValue = textNormalize(mainSearch.value);
-  //On utilise la méthode filter pour que la recherche démarre uniquement lorsque 3 caractères sont entrés
-  const searchWords = searchValue.split(/\s+/).filter(word => word.length >= 3);
+   // Utilisation de la méthode filter pour que la recherche démarre uniquement lorsque 3 caractères sont entrés
 
+    const searchWords = searchValue.split(/\s+/).filter(word => word.length >= 3);
     const filteredRecipes = recipes.filter(recipe => {
     const lowerCaseName = textNormalize(recipe.name);
     const lowerCaseDescription = textNormalize(recipe.description);
@@ -89,6 +89,7 @@ const selectedFilters = {
   utensils: []
 };
 
+// Fonction pour afficher les filtres sélectionnés
 
 function displayFilters() {
   filtersAdded.appendChild(filtersDiv);
@@ -144,6 +145,7 @@ function createListItem(text, isSelected) {
   }
   return li;
 }
+// Création des listes déroulantes pour ingrédients, appareils et ustensiles
 
 function createDropdownList(container, dropdownId, optionsSet, label) {
     const dropdown = document.createElement("div");
@@ -240,7 +242,7 @@ createDropdownList(utensilList, "utensils", uniqueUtensils, "Ustensiles");
 filterSection.appendChild(ingredientList);
 filterSection.appendChild(applianceList);
 filterSection.appendChild(utensilList);
-
+// Création des listes déroulantes pour ingrédients, appareils et ustensiles
 
 function filterDropdownLists(filteredRecipes) {
 
@@ -283,7 +285,7 @@ function toggleClearSearchIcon() {
   clearSearchIcon.style.display = mainSearch.value.trim() !== "" ? "inline-block" : "none";
 }
 
-//ecouteurs d'évenement
+//// Ajout d'écouteurs d'événements pour la recherche et les filtres
 document.addEventListener("DOMContentLoaded", () => {
   mainSearch.value = "";
   mainSearch.dispatchEvent(new Event("input"));
@@ -307,6 +309,7 @@ function closeDropdowns() {
     dropdown.classList.remove("open");
   });
 }
+// Ajout d'un écouteur d'événement pour fermer les listes déroulantes lorsque l'utilisateur clique en dehors
 
 document.addEventListener("mousedown", (event) => {
     const isClickInsideDropdown = event.target.closest(".dropdown");
