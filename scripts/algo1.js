@@ -322,3 +322,109 @@ document.addEventListener("mousedown", (event) => {
       });
     }
   });
+
+  
+
+// Utilisation de regex pour sécuriser les input de la barre de recherche principale 
+// Définissez des regex pour les filtres (par exemple, uniquement des lettres et des espaces)
+const filterRegex = /^[a-zA-Z\s]*$/;
+const searchRegex = /^[a-zA-Z\s]*$/;
+
+// Fonction pour valider un filtre
+function isValidFilterInput(input, regex) {
+  return regex.test(input);
+}
+
+// Fonction pour valider la recherche
+function isValidSearchInput(input) {
+  return searchRegex.test(input);
+}
+
+// Gestionnaire d'événement pour les filtres des ingrédients
+const ingredientItems = document.querySelectorAll(".ingredient-filter");
+const applianceItems = document.querySelectorAll(".appliance-filter");
+const utensilItems = document.querySelectorAll(".utensil-filter");
+
+ingredientItems.forEach(item => {
+  const itemText = textNormalize(item.textContent);
+  item.addEventListener("click", () => {
+    const selectedValue = itemText;
+    const isSelected = item.classList.contains("selected");
+
+    if (isSelected) {
+      const updatedFilterValues = selectedFilters.ingredients.filter(item => item !== selectedValue);
+      selectedFilters.ingredients = updatedFilterValues;
+    } else {
+      if (isValidFilterInput(selectedValue, filterRegex)) {
+        item.classList.add("selected");
+        selectedFilters.ingredients.push(selectedValue);
+        filterRecipes();
+        displayFilters();
+      } else {
+        // Filtre non valide, affichez un message d'erreur
+        alert("Le filtre n'est pas valide. Utilisez uniquement des lettres et des espaces.");
+      }
+    }
+  });
+});
+
+// Gestionnaire d'événement pour les filtres des appareils
+applianceItems.forEach(item => {
+  const itemText = textNormalize(item.textContent);
+  item.addEventListener("click", () => {
+    const selectedValue = itemText;
+    const isSelected = item.classList.contains("selected");
+
+    if (isSelected) {
+      const updatedFilterValues = selectedFilters.appliances.filter(item => item !== selectedValue);
+      selectedFilters.appliances = updatedFilterValues;
+    } else {
+      if (isValidFilterInput(selectedValue, filterRegex)) {
+        item.classList.add("selected");
+        selectedFilters.appliances.push(selectedValue);
+        filterRecipes();
+        displayFilters();
+      } else {
+        // Filtre non valide, affichez un message d'erreur
+        alert("Le filtre n'est pas valide. Utilisez uniquement des lettres et des espaces.");
+      }
+    }
+  });
+});
+
+// Gestionnaire d'événement pour les filtres des ustensiles
+utensilItems.forEach(item => {
+  const itemText = textNormalize(item.textContent);
+  item.addEventListener("click", () => {
+    const selectedValue = itemText;
+    const isSelected = item.classList.contains("selected");
+
+    if (isSelected) {
+      const updatedFilterValues = selectedFilters.utensils.filter(item => item !== selectedValue);
+      selectedFilters.utensils = updatedFilterValues;
+    } else {
+      if (isValidFilterInput(selectedValue, filterRegex)) {
+        item.classList.add("selected");
+        selectedFilters.utensils.push(selectedValue);
+        filterRecipes();
+        displayFilters();
+      } else {
+        // Filtre non valide, affichez un message d'erreur
+        alert("Le filtre n'est pas valide. Utilisez uniquement des lettres et des espaces.");
+      }
+    }
+  });
+});
+
+// Gestionnaire d'événement pour la recherche
+mainSearch.addEventListener("input", () => {
+  const searchValue = textNormalize(mainSearch.value);
+
+  if (isValidSearchInput(searchValue)) {
+    toggleClearSearchIcon();
+    filterRecipes();
+  } else {
+    // Recherche non valide, affichez un message d'erreur
+    alert("La recherche n'est pas valide. Utilisez uniquement des lettres et des espaces.");
+  }
+});
