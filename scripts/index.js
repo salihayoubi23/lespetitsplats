@@ -38,9 +38,9 @@ function init() {
   const recipes = getRecipes();
   // Affichez les données des recettes.
   displayData(recipes);
-  // Filtrez les recettes en fonction des filtres (peut-être manquant dans le code que vous avez partagé).
+  // Filtrez les recettes en fonction des filtres .
   filterRecipes();
-  // Affichez les filtres dans l'interface utilisateur (peut-être manquant dans le code que vous avez partagé).
+  // Affichez les filtres dans l'interface utilisateur .
   displayFilters();
 }
 
