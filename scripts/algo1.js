@@ -50,84 +50,108 @@ const selectedFilters = {
 };
 
 
-//Fonction pour mettre à jour et afficher la liste des recettes mise à jour lorsqu'une recherche est effectuée
+// Cette fonction filtre les recettes en fonction des critères de recherche et des filtres sélectionnés.
 function filterRecipes() {
+  // Obtenez la valeur de recherche à partir de l'élément d'entrée de texte et normalisez-la.
   const searchValue = textNormalize(mainSearch.value);
-  //On créé une boucle for pour que la recherche démarre uniquement lorsque 3 caractères sont entrés
+
+  // Créez un tableau pour stocker les mots clés de recherche.
   const searchWords = [];
+  // Divisez la valeur de recherche en mots individuels en utilisant l'espace comme séparateur.
   const words = searchValue.split(/\s+/);
 
+  // Parcourez les mots pour les ajouter à la liste des mots clés de recherche s'ils ont au moins 3 caractères.
   for (let i = 0; i < words.length; i++) {
     const word = words[i];
     if (word.length >= 3) {
       searchWords.push(word);
     }
   }
-  //On créé un tableau pour contenir nos recettes filtrées
+
+  // Créez un tableau pour stocker les recettes filtrées.
   const filteredRecipes = [];
 
+  // Parcourez toutes les recettes disponibles.
   for (const recipe of recipes) {
+    // Normalisez le nom et la description de la recette.
     const lowerCaseName = textNormalize(recipe.name);
     const lowerCaseDescription = textNormalize(recipe.description);
 
+    // Initialisez une variable pour vérifier si la recette correspond aux mots clés de recherche.
     let matchesSearchWords = true;
+
+    // Parcourez les mots clés de recherche.
     for (const word of searchWords) {
-      if (!lowerCaseName.includes(word) && !lowerCaseDescription.includes(word) && !recipe.ingredients.some(ingredient =>
-          textNormalize(ingredient.ingredient).includes(word)
-        )
-      ) {
-        matchesSearchWords = false;
-        break;
+      // Vérifiez si le mot n'est pas présent dans le nom de la recette ni dans la description.
+      if (!lowerCaseName.includes(word) && !lowerCaseDescription.includes(word)) {
+        // Initialisez une variable pour vérifier si le mot clé de recherche est trouvé dans les ingrédients.
+        let wordIsFoundInIngredients = false;
+
+        // Parcourez les ingrédients de la recette.
+        for (const ingredient of recipe.ingredients) {
+          // Vérifiez si le mot clé de recherche est trouvé dans l'ingrédient (en le normalisant d'abord).
+          if (textNormalize(ingredient.ingredient).includes(word)) {
+            wordIsFoundInIngredients = true;
+            break;
+          }
+        }
+
+        // Si le mot clé de recherche n'est pas trouvé dans les ingrédients, la recette ne correspond pas.
+        if (!wordIsFoundInIngredients) {
+          matchesSearchWords = false;
+          break;
+        }
       }
     }
 
-    const selectedIngredients = [];
-    for (const ingredient of selectedFilters.ingredients) {
-      selectedIngredients.push(textNormalize(ingredient));
-    }
+    // Obtenez les filtres d'ingrédients, d'appareils et d'ustensiles sélectionnés et normalisez-les.
+    const selectedIngredients = selectedFilters.ingredients.map(textNormalize);
+    const selectedAppliances = selectedFilters.appliances.map(textNormalize);
+    const selectedUtensils = selectedFilters.utensils.map(textNormalize);
 
-    const selectedAppliances = [];
-    for (const appliance of selectedFilters.appliances) {
-      selectedAppliances.push(textNormalize(appliance));
-    }
-    const selectedUtensils = [];
-    for (const utensil of selectedFilters.utensils) {
-      selectedUtensils.push(textNormalize(utensil));
-    }
-
+    // Initialisez des variables pour vérifier si la recette correspond aux filtres sélectionnés.
     let hasSelectedIngredients = true;
+    let hasSelectedAppliance = selectedAppliances.length === 0 || selectedAppliances.includes(textNormalize(recipe.appliance));
+    let hasSelectedUtensils = true;
+
+    // Vérifiez si tous les ingrédients sélectionnés sont présents dans la recette.
     for (const ingredient of selectedIngredients) {
-      if (!recipe.ingredients.some(item => textNormalize(item.ingredient) === ingredient)) {
+      let ingredientFound = false;
+      for (const item of recipe.ingredients) {
+        // Vérifiez si l'ingrédient sélectionné est trouvé dans les ingrédients de la recette.
+        if (textNormalize(item.ingredient) === ingredient) {
+          ingredientFound = true;
+          break;
+        }
+      }
+      // Si l'ingrédient sélectionné n'est pas trouvé, la recette ne correspond pas.
+      if (!ingredientFound) {
         hasSelectedIngredients = false;
         break;
       }
     }
 
-    let hasSelectedAppliance = selectedAppliances.length === 0 || selectedAppliances.includes(textNormalize(recipe.appliance));
-
-    let hasSelectedUtensils = true;
-    for (const utensil of selectedUtensils) {
-      if (!recipe.ustensils.some(item => textNormalize(item) === utensil)) {
-        hasSelectedUtensils = false;
-        break;
-      }
-    }
-
-    //Si la recette correspond aux informations données, on l'inclut dans le tableau et on l'affiche sur la page
+    // Si la recette correspond à tous les critères, ajoutez-la aux recettes filtrées.
     if (matchesSearchWords && hasSelectedIngredients && hasSelectedAppliance && hasSelectedUtensils) {
       filteredRecipes.push(recipe);
     }
   }
 
+  // Si aucune recette ne correspond aux critères, affichez une liste vide.
   if (filteredRecipes.length === 0) {
     displayData([]);
     return;
   }
 
-  //On remet à jour la liste des recettes
+  // Mettez à jour la liste des recettes affichées avec les recettes filtrées.
   displayData(filteredRecipes);
-  filterDropdownLists(filteredRecipes); 
+
+  // Mettez à jour les listes déroulantes de filtres.
+  filterDropdownLists(filteredRecipes);
 }
+
+
+
 
 
 function displayFilters() {
